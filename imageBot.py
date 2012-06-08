@@ -1,8 +1,8 @@
 from random import choice
 import re
 import socket
-from botplugin import BotPlugin
-from jabberbot import botcmd
+from errbot.botplugin import BotPlugin
+from errbot.jabberbot import botcmd
 import urllib2
 import simplejson
 from lxml import objectify

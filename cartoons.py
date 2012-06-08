@@ -2,8 +2,8 @@ from random import choice
 import re
 from urllib2 import urlopen
 import urllib2
-from botplugin import BotPlugin
-from jabberbot import botcmd
+from errbot.botplugin import BotPlugin
+from errbot.jabberbot import botcmd
 from lxml import objectify
 
 class Cartoons(BotPlugin):
