@@ -1,0 +1,6 @@
+[Core]
+Name = Cartoons
+Module = cartoons
+
+[Documentation]
+Description = Access to various cartoon sites.

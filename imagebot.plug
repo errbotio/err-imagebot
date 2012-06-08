@@ -1,0 +1,6 @@
+[Core]
+Name = ImageBot
+Module = imageBot
+
+[Documentation]
+Description = Show me something !
