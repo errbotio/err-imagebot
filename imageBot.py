@@ -3,9 +3,14 @@ import re
 import socket
 from errbot.botplugin import BotPlugin
 from errbot.jabberbot import botcmd
-import urllib2
+from urllib2 import urlopen, Request, quote
 import simplejson
 from lxml import objectify
+
+def extract_rss_urls(feed_url):
+    rss_content = urlopen(feed_url).read()
+    rss = objectify.fromstring(rss_content)
+    return [re.search('src=\"(.+?)\"', description.text).groups()[0] for description in rss.xpath("//item/description")]
 
 GOOGLE_IMAGE_URL = ('https://ajax.googleapis.com/ajax/services/search/images?' +
                     'v=1.0&q=%s&userip=%s')
@@ -13,12 +18,14 @@ GOOGLE_IMAGE_URL = ('https://ajax.googleapis.com/ajax/services/search/images?' +
 class ImageBot(BotPlugin):
     def callback_connect(self):
         # small hack because google wants the private address of the user to avoid automated searchs
+        s = None
         try:
             s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             s.connect(("gmail.com", 80))
             self.local_addr = s.getsockname()[0]
         finally:
-            s.close()
+            if s:
+                s.close()
 
     @botcmd
     def showme(self, mess, args):
@@ -27,8 +34,8 @@ class ImageBot(BotPlugin):
         """
         if not args:
             return 'Am I supposed to guess the image you want ?...'
-        request = urllib2.Request(GOOGLE_IMAGE_URL % (urllib2.quote(args), self.local_addr), None, {'Referer': 'http://www.gootz.net/'})
-        response = urllib2.urlopen(request)
+        request = Request(GOOGLE_IMAGE_URL % (quote(args), self.local_addr), None, {'Referer': 'http://www.gootz.net/'})
+        response = urlopen(request)
         results = simplejson.load(response)
         lucky_result = results['responseData']['results'][0]
         return '%s : %s' % (lucky_result['content'], lucky_result['unescapedUrl'])
@@ -39,7 +46,4 @@ class ImageBot(BotPlugin):
         """
         Display dubious pictures from http://awkwardstockphotos.com/
         """
-        rss_content = urllib2.urlopen("http://awkwardstockphotos.com/rss").read()
-        rss = objectify.fromstring(rss_content)
-        urls = [re.search('src=\"(.+?)\"', description.text).groups()[0] for description in rss.xpath("//item/description")]
-        return choice(urls)
+        return choice(extract_rss_urls('http://awkwardstockphotos.com/rss'))
