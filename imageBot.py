@@ -47,3 +47,11 @@ class ImageBot(BotPlugin):
         Display dubious pictures from http://awkwardstockphotos.com/
         """
         return choice(extract_rss_urls('http://awkwardstockphotos.com/rss'))
+
+    @botcmd
+    def facepalm(self, mess, args):
+        return urlopen('http://facepalm.org/img.php').geturl()
+
+    @botcmd
+    def fp(self, mess, args):
+        return self.facepalm(mess, args)
