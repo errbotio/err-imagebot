@@ -30,4 +30,4 @@ class Cartoons(BotPlugin):
         args=args.strip()
         if not args:
             return 'What can I shout for you ?'
-        return 'n' + urlopen('http://asciime.heroku.com/generate_ascii?s=%s'%quote(args)).read()
+        return '\n' + urlopen('http://asciime.heroku.com/generate_ascii?s=%s'%quote(args)).read()
