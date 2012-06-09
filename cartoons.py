@@ -2,7 +2,7 @@ from random import choice
 from errbot.botplugin import BotPlugin
 from errbot.jabberbot import botcmd
 from imageBot import extract_rss_urls
-
+from urllib2 import quote, urlopen
 
 class Cartoons(BotPlugin):
     @botcmd
@@ -21,3 +21,13 @@ class Cartoons(BotPlugin):
         """
         urls = extract_rss_urls('http://xkcd.com/rss.xml')
         return choice(urls)
+
+    @botcmd
+    def shout(self, mess, args):
+        """
+        Display the queried ascii art
+        """
+        args=args.strip()
+        if not args:
+            return 'What can I shout for you ?'
+        return 'n' + urlopen('http://asciime.heroku.com/generate_ascii?s=%s'%quote(args)).read()
