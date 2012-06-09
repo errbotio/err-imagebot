@@ -50,8 +50,14 @@ class ImageBot(BotPlugin):
 
     @botcmd
     def facepalm(self, mess, args):
+        """
+        To use in case of real stupid mistake...
+        """
         return urlopen('http://facepalm.org/img.php').geturl()
 
     @botcmd
     def fp(self, mess, args):
+        """
+        Alias on !facepalm
+        """
         return self.facepalm(mess, args)
