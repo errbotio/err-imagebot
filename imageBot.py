@@ -6,6 +6,7 @@ from errbot.jabberbot import botcmd
 from urllib2 import urlopen, Request, quote
 import simplejson
 from lxml import objectify
+from random import choice
 
 def extract_rss_urls(feed_url):
     rss_content = urlopen(feed_url).read()
@@ -37,7 +38,7 @@ class ImageBot(BotPlugin):
         request = Request(GOOGLE_IMAGE_URL % (quote(args), self.local_addr), None, {'Referer': 'http://www.gootz.net/'})
         response = urlopen(request)
         results = simplejson.load(response)
-        lucky_result = results['responseData']['results'][0]
+        lucky_result = choice(results['responseData']['results'])
         return '%s : %s' % (lucky_result['content'], lucky_result['unescapedUrl'])
 
 
