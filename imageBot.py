@@ -7,6 +7,7 @@ from urllib2 import urlopen, Request, quote
 import simplejson
 from lxml import objectify
 from random import choice
+from bs4 import BeautifulSoup
 
 def extract_rss_urls(feed_url):
     rss_content = urlopen(feed_url).read()
@@ -62,3 +63,13 @@ class ImageBot(BotPlugin):
         Alias on !facepalm
         """
         return self.facepalm(mess, args)
+
+    @botcmd
+    def animals(self, mess, args):
+        """
+        Fun gifs from http://animalsbeingdicks.com/
+        """
+        body = urlopen(urlopen('http://animalsbeingdicks.com/random').geturl()).read()
+        soup = BeautifulSoup(body)
+        ps = soup.select(".entry")[0].find_all('p')
+        return ps[0].img['src'] + '\n' + unicode(ps[1].contents[0])
