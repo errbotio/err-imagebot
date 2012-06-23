@@ -72,4 +72,5 @@ class ImageBot(BotPlugin):
         body = urlopen(urlopen('http://animalsbeingdicks.com/random').geturl()).read()
         soup = BeautifulSoup(body)
         ps = soup.select(".entry")[0].find_all('p')
-        return ps[0].img['src'] + '\n' + unicode(ps[1].contents[0])
+        self.send(mess.getFrom(), ps[0].img['src'], message_type=mess.getType())
+        return unicode(ps[1].contents[0])
