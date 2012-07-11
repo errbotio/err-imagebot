@@ -36,7 +36,7 @@ class ImageBot(BotPlugin):
         """
         if not args:
             return 'Am I supposed to guess the image you want ?...'
-        request = Request(GOOGLE_IMAGE_URL % (quote(args), self.local_addr), None, {'Referer': 'http://www.gootz.net/'})
+        request = Request(GOOGLE_IMAGE_URL % (quote(args.encode('utf-8')), self.local_addr), None, {'Referer': 'http://www.gootz.net/'})
         response = urlopen(request)
         results = simplejson.load(response)
         lucky_result = choice(results['responseData']['results'])
