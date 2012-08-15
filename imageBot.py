@@ -1,12 +1,20 @@
 from random import choice
 import re
 import socket
-from errbot.botplugin import BotPlugin
-from errbot.jabberbot import botcmd
+
+# Backward compatibility
+from errbot.version import VERSION
+from errbot.utils import version2array
+if version2array(VERSION) >= [1,6,0]:
+    from errbot import botcmd, BotPlugin
+else:
+    from errbot.botplugin import BotPlugin
+    from errbot.jabberbot import botcmd
+
 from urllib2 import urlopen, Request, quote
 import simplejson
 from lxml import objectify
-from random import choice
+
 from bs4 import BeautifulSoup
 
 def extract_rss_urls(feed_url):
