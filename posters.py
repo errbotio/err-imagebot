@@ -15,18 +15,18 @@ def get_random_url_from_feed(feed_url):
 
 class Posters(BotPlugin):
 
-    @botcmd
+    @botcmd(template='showme')
     def fixor(self, mess, args):
         """
             There ! I fixed it !
             from http://thereifixedit.files.wordpress.com/
         """
-        return get_random_url_from_feed('http://feeds.feedburner.com/ThereIFixedIt')
+        return {'content':'There I fixed it !', 'url':get_random_url_from_feed('http://feeds.feedburner.com/ThereIFixedIt')}
 
-    @botcmd
+    @botcmd(template='showme')
     def wtf(self, mess, args):
         """
         (De)motivates you
         from VeryDemotivational
         """
-        return get_random_url_from_feed('http://feeds.feedburner.com/VeryDemotivational')
+        return {'content':'Very demotivational !', 'url':get_random_url_from_feed('http://feeds.feedburner.com/VeryDemotivational')}

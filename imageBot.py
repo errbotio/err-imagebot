@@ -50,28 +50,28 @@ class ImageBot(BotPlugin):
         lucky_result = choice(results['responseData']['results'])
         return {'content':lucky_result['content'], 'url':lucky_result['unescapedUrl']}
 
-    @botcmd
+    @botcmd(template='showme')
     def stockphoto(self, mess, args):
         """
         Display dubious pictures from http://awkwardstockphotos.com/
         """
-        return choice(extract_rss_urls('http://awkwardstockphotos.com/rss'))
+        return {'content':'Random StockPhoto', 'url':choice(extract_rss_urls('http://awkwardstockphotos.com/rss'))}
 
-    @botcmd
+    @botcmd(template='showme')
     def facepalm(self, mess, args):
         """
         To use in case of real stupid mistake...
         """
-        return urlopen('http://facepalm.org/img.php').geturl()
+        return {'content':'Random Facepalm', 'url':urlopen('http://facepalm.org/img.php').geturl()}
 
-    @botcmd
+    @botcmd(template='showme')
     def fp(self, mess, args):
         """
         Alias on !facepalm
         """
         return self.facepalm(mess, args)
 
-    @botcmd
+    @botcmd(template='showme')
     def animals(self, mess, args):
         """
         Fun gifs from http://animalsbeingdicks.com/
@@ -79,5 +79,5 @@ class ImageBot(BotPlugin):
         body = urlopen(urlopen('http://animalsbeingdicks.com/random').geturl()).read()
         soup = BeautifulSoup(body)
         ps = soup.select(".entry")[0].find_all('p')
-        self.send(mess.getFrom(), ps[0].img['src'], message_type=mess.getType())
-        return unicode(ps[1].contents[0])
+        return {'content':unicode(ps[1].contents[0]), 'url':ps[0].img['src']}
+
