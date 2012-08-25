@@ -37,7 +37,7 @@ class ImageBot(BotPlugin):
             if s:
                 s.close()
 
-    @botcmd
+    @botcmd(template='showme')
     def showme(self, mess, args):
         """ Shows you an image based on the arguments
         Example: !showme a monkey
@@ -48,8 +48,7 @@ class ImageBot(BotPlugin):
         response = urlopen(request)
         results = simplejson.load(response)
         lucky_result = choice(results['responseData']['results'])
-        return '%s : %s' % (lucky_result['content'], lucky_result['unescapedUrl'])
-
+        return {'content':lucky_result['content'], 'url':lucky_result['unescapedUrl']}
 
     @botcmd
     def stockphoto(self, mess, args):
