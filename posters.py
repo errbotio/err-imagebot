@@ -1,5 +1,6 @@
 from random import choice
 from feedparser import parse
+import re
 
 # Backward compatibility
 from errbot.version import VERSION
@@ -11,7 +12,9 @@ else:
     from errbot.jabberbot import botcmd
 
 def get_random_url_from_feed(feed_url):
-    return choice([feed.media_content[1]['url'] for feed in parse(feed_url)['entries'] if len(feed.media_content)>1])
+    feeds = parse(feed_url)['entries']
+    html = choice([feed.content[0].value for feed in feeds if len(feed.content)>0])
+    return re.search(r'.*src="(.*\.(jpg|png))".*',html).group(1) # find the first thing that matches an image
 
 class Posters(BotPlugin):
 
