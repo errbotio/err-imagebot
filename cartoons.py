@@ -29,7 +29,7 @@ class Cartoons(BotPlugin):
         Display random XKCD from RSS feed from http://xkcd.com
         """
         urls = extract_rss_urls('http://xkcd.com/rss.xml')
-
+        return {'content':'Random XKCD', 'url':choice(urls)}
 
     @botcmd
     def shout(self, mess, args):
