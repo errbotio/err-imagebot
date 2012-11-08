@@ -12,7 +12,7 @@ else:
     from errbot.jabberbot import botcmd
 
 from urllib2 import urlopen, Request, quote
-import simplejson
+import json
 from lxml import objectify
 
 from bs4 import BeautifulSoup
@@ -46,7 +46,7 @@ class ImageBot(BotPlugin):
             return 'Am I supposed to guess the image you want ?...'
         request = Request(GOOGLE_IMAGE_URL % (quote(args.encode('utf-8')), self.local_addr), None, {'Referer': 'http://www.gootz.net/'})
         response = urlopen(request)
-        results = simplejson.load(response)
+        results = json.load(response)
         lucky_result = choice(results['responseData']['results'])
         return {'content':lucky_result['content'], 'url':lucky_result['unescapedUrl']}
 

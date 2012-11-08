@@ -1,4 +1,3 @@
 feedparser
-simplejson
 lxml
 beautifulsoup4
