@@ -1,17 +1,14 @@
 from random import choice
 
-# Backward compatibility
-from errbot.version import VERSION
-from errbot.utils import version2array
-if version2array(VERSION) >= [1,6,0]:
-    from errbot import botcmd, BotPlugin
-else:
-    from errbot.botplugin import BotPlugin
-    from errbot.jabberbot import botcmd
-
-
+from errbot import botcmd, BotPlugin, PY2
 from imageBot import extract_rss_urls
-from urllib2 import quote, urlopen
+
+if PY2:
+    from urllib2 import quote, urlopen
+else:
+    from urllib.request import urlopen
+    from urllib.parse import quote
+
 
 class Cartoons(BotPlugin):
     @botcmd(template='showme')
@@ -21,7 +18,7 @@ class Cartoons(BotPlugin):
         """
         urls = extract_rss_urls('http://feed.dilbert.com/dilbert/most_popular?format=xml')
         urls.extend(extract_rss_urls('http://feed.dilbert.com/dilbert/daily_strip?format=xml'))
-        return {'content':'Random Dilbert', 'url':choice(urls)}
+        return {'content': 'Random Dilbert', 'url': choice(urls)}
 
     @botcmd(template='showme')
     def xkcd(self, mess, args):
@@ -29,14 +26,14 @@ class Cartoons(BotPlugin):
         Display random XKCD from RSS feed from http://xkcd.com
         """
         urls = extract_rss_urls('http://xkcd.com/rss.xml')
-        return {'content':'Random XKCD', 'url':choice(urls)}
+        return {'content': 'Random XKCD', 'url': choice(urls)}
 
     @botcmd
     def shout(self, mess, args):
         """
         Display the queried ascii art
         """
-        args=args.strip()
+        args = args.strip()
         if not args:
             return 'What can I shout for you ?'
-        return urlopen('http://asciime.heroku.com/generate_ascii?s=%s'%quote(args)).read()
+        return urlopen('http://asciime.heroku.com/generate_ascii?s=%s' % quote(args)).read()

@@ -4,3 +4,6 @@ Module = imageBot
 
 [Documentation]
 Description = Show me something !
+
+[Python]
+Version = 2+

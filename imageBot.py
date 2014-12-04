@@ -2,28 +2,29 @@ from random import choice
 import re
 import socket
 
-# Backward compatibility
-from errbot.version import VERSION
-from errbot.utils import version2array
-if version2array(VERSION) >= [1,6,0]:
-    from errbot import botcmd, BotPlugin
-else:
-    from errbot.botplugin import BotPlugin
-    from errbot.jabberbot import botcmd
+from errbot import botcmd, BotPlugin, PY2
 
-from urllib2 import urlopen, Request, quote
+if PY2:
+    from urllib2 import quote, urlopen
+else:
+    from urllib.request import urlopen, Request
+    from urllib.parse import quote
+
 import json
 from lxml import objectify
 
 from bs4 import BeautifulSoup
+
 
 def extract_rss_urls(feed_url):
     rss_content = urlopen(feed_url).read()
     rss = objectify.fromstring(rss_content)
     return [re.search('src=\"(.+?)\"', description.text).groups()[0] for description in rss.xpath("//item/description")]
 
+
 GOOGLE_IMAGE_URL = ('https://ajax.googleapis.com/ajax/services/search/images?' +
                     'v=1.0&q=%s&userip=%s')
+
 
 class ImageBot(BotPlugin):
     def callback_connect(self):
@@ -44,25 +45,26 @@ class ImageBot(BotPlugin):
         """
         if not args:
             return 'Am I supposed to guess the image you want ?...'
-        request = Request(GOOGLE_IMAGE_URL % (quote(args.encode('utf-8')), self.local_addr), None, {'Referer': 'http://www.gootz.net/'})
+        request = Request(GOOGLE_IMAGE_URL % (quote(args.encode('utf-8')), self.local_addr), None,
+                          {'Referer': 'http://www.gootz.net/'})
         response = urlopen(request)
-        results = json.load(response)
+        results = json.loads(response.read().decode('utf-8'))
         lucky_result = choice(results['responseData']['results'])
-        return {'content':lucky_result['content'], 'url':lucky_result['unescapedUrl']}
+        return {'content': lucky_result['content'], 'url': lucky_result['unescapedUrl']}
 
     @botcmd(template='showme')
     def stockphoto(self, mess, args):
         """
         Display dubious pictures from http://awkwardstockphotos.com/
         """
-        return {'content':'Random StockPhoto', 'url':choice(extract_rss_urls('http://awkwardstockphotos.com/rss'))}
+        return {'content': 'Random StockPhoto', 'url': choice(extract_rss_urls('http://awkwardstockphotos.com/rss'))}
 
     @botcmd(template='showme')
     def facepalm(self, mess, args):
         """
         To use in case of real stupid mistake...
         """
-        return {'content':'Random Facepalm', 'url':urlopen('http://facepalm.org/img.php').geturl()}
+        return {'content': 'Random Facepalm', 'url': urlopen('http://facepalm.org/img.php').geturl()}
 
     @botcmd(template='showme')
     def fp(self, mess, args):
@@ -79,5 +81,5 @@ class ImageBot(BotPlugin):
         body = urlopen(urlopen('http://animalsbeingdicks.com/random').geturl()).read()
         soup = BeautifulSoup(body)
         ps = soup.select(".entry")[0].find_all('p')
-        return {'content':unicode(ps[1].contents[0]), 'url':ps[0].img['src']}
+        return {'content': str(ps[1].contents[0]), 'url': ps[0].img['src']}
 

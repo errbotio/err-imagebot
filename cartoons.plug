@@ -4,3 +4,6 @@ Module = cartoons
 
 [Documentation]
 Description = Access to various cartoon sites.
+
+[Python]
+Version = 2+

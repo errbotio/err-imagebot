@@ -4,3 +4,7 @@ Module = posters
 
 [Documentation]
 Description = various posters..
+
+[Python]
+Version = 2+
+
