@@ -5,7 +5,7 @@ import socket
 from errbot import botcmd, BotPlugin, PY2
 
 if PY2:
-    from urllib2 import quote, urlopen
+    from urllib2 import quote, urlopen, Request
 else:
     from urllib.request import urlopen, Request
     from urllib.parse import quote
