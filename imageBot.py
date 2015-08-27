@@ -1,25 +1,24 @@
 from random import choice
-import re
 import socket
+import json
 
-from errbot import botcmd, BotPlugin, PY2
 
+from errbot import PY2
 if PY2:
     from urllib2 import quote, urlopen, Request
 else:
     from urllib.request import urlopen, Request
     from urllib.parse import quote
 
-import json
-from lxml import objectify
-
+import feedparser
 from bs4 import BeautifulSoup
+
+from errbot import botcmd, BotPlugin
 
 
 def extract_rss_urls(feed_url):
-    rss_content = urlopen(feed_url).read()
-    rss = objectify.fromstring(rss_content)
-    return [re.search('src=\"(.+?)\"', description.text).groups()[0] for description in rss.xpath("//item/description")]
+    rss = feedparser.parse(feed_url)
+    return [entry.link for entry in rss.entries]
 
 
 GOOGLE_IMAGE_URL = ('https://ajax.googleapis.com/ajax/services/search/images?' +

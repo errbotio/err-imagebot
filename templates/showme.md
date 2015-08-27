@@ -1,1 +1,4 @@
-[[{{content}}]({{url}})]
+![{{content}}]({{url}})
+
+
+[{{content}}]({{url}})
