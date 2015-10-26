@@ -20,7 +20,6 @@ def extract_rss_urls(feed_url):
     rss = feedparser.parse(feed_url)
     return [entry.link for entry in rss.entries]
 
-
 GOOGLE_IMAGE_URL = ('https://ajax.googleapis.com/ajax/services/search/images?' +
                     'v=1.0&q=%s&userip=%s')
 
@@ -63,7 +62,24 @@ class ImageBot(BotPlugin):
         """
         To use in case of real stupid mistake...
         """
-        return {'content': 'Random Facepalm', 'url': urlopen('http://facepalm.org/img.php').geturl()}
+        fp_urls = (
+          'http://i.imgur.com/FSjAzgr.gif',
+          'http://i.imgur.com/QtFZ0PR.gif',
+          'http://i.imgur.com/xgjt5AI.gif',
+          'http://i.imgur.com/e6327Nd.gif',
+          'http://i.imgur.com/SOATEDJ.gif',
+          'http://i.imgur.com/lfL0UvH.webm',
+          'http://i.imgur.com/uDNqsKs.gif',
+          'http://i.imgur.com/3j7CNAP.webm',
+          'http://i.imgur.com/4p6uYDA.webm',
+          'http://i.imgur.com/iYxCSIx.gif',
+          'http://i.imgur.com/m6jAMAE.gif',
+          'http://i.imgur.com/CMYo71o.gif',
+          'http://i.imgur.com/kvtwvtz.gif',
+          'http://i.imgur.com/Oeelidy.gif',
+          'http://i.imgur.com/NYOyGqw.gif',
+          'http://i.imgur.com/X4WIDWW.gif')
+        return {'content': 'Random Facepalm', 'url': choice(fp_urls)}
 
     @botcmd(template='showme')
     def fp(self, mess, args):
