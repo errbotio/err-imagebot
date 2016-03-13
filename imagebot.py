@@ -1,15 +1,6 @@
 from random import choice
-import socket
 import json
-
-
-from errbot import PY2
-if PY2:
-    from urllib2 import quote, urlopen, Request
-else:
-    from urllib.request import urlopen, Request
-    from urllib.parse import quote
-
+import requests
 import feedparser
 from bs4 import BeautifulSoup
 
@@ -20,35 +11,34 @@ def extract_rss_urls(feed_url):
     rss = feedparser.parse(feed_url)
     return [entry.link for entry in rss.entries]
 
-GOOGLE_IMAGE_URL = ('https://ajax.googleapis.com/ajax/services/search/images?' +
-                    'v=1.0&q=%s&userip=%s')
 
+GOOGLE_IMAGE_URL = 'https://www.googleapis.com/customsearch/v1'
 
 class ImageBot(BotPlugin):
-    def callback_connect(self):
-        # small hack because google wants the private address of the user to avoid automated searchs
-        s = None
-        try:
-            s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-            s.connect(("gmail.com", 80))
-            self.local_addr = s.getsockname()[0]
-        finally:
-            if s:
-                s.close()
+    def get_configuration_template(self):
+        return {'PROJECT_KEY': 'AIzaSyAdZYdygeThui2HVEcyNP27Y80ucFzcBQv',
+                 'CX_ID': '004082647395918233991:3ewyx6ygcly'}
 
     @botcmd(template='showme')
-    def showme(self, mess, args):
+    def showme(self, _, args):
         """ Shows you an image based on the arguments
         Example: !showme a monkey
         """
+        if self.config is None:
+            return 'This plugin needs to be configured with `!plugin config ImageBot` with a google project.\n\
+            Get your own PROJECT_KEY and CX_ID from:\n\
+            http://stackoverflow.com/questions/34035422/google-image-search-says-api-no-longer-available for details.'
         if not args:
             return 'Am I supposed to guess the image you want ?...'
-        request = Request(GOOGLE_IMAGE_URL % (quote(args.encode('utf-8')), self.local_addr), None,
-                          {'Referer': 'http://www.gootz.net/'})
-        response = urlopen(request)
-        results = json.loads(response.read().decode('utf-8'))
-        lucky_result = choice(results['responseData']['results'])
-        return {'content': lucky_result['content'], 'url': lucky_result['unescapedUrl']}
+        params = {'key': self.config['PROJECT_KEY'],
+                  'cx': self.config['CX_ID'],
+                  'q': args,
+                  'imgSize': 'medium',
+                  'searchType': 'image'}
+        request = requests.request('GET', GOOGLE_IMAGE_URL, params=params)
+        results = request.json()
+        lucky_result = choice(results['items'])
+        return {'content': lucky_result['htmlTitle'], 'url': lucky_result['link']}
 
     @botcmd(template='showme')
     def stockphoto(self, mess, args):
