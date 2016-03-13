@@ -1,7 +1,7 @@
 from random import choice
 
 from errbot import botcmd, BotPlugin
-from imageBot import extract_rss_urls
+from .imagebot import extract_rss_urls
 
 
 class Cartoons(BotPlugin):
