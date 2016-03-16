@@ -1,5 +1,4 @@
 from random import choice
-import json
 import requests
 import feedparser
 from bs4 import BeautifulSoup
@@ -83,7 +82,7 @@ class ImageBot(BotPlugin):
         """
         Fun gifs from http://animalsbeingdicks.com/
         """
-        body = urlopen(urlopen('http://animalsbeingdicks.com/random').geturl()).read()
+        body = requests.get('http://animalsbeingdicks.com/random').content
         soup = BeautifulSoup(body)
         ps = soup.select(".entry")[0].find_all('p')
         return {'content': str(ps[1].contents[0]), 'url': ps[0].img['src']}
