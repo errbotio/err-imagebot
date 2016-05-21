@@ -57,17 +57,16 @@ class ImageBot(BotPlugin):
           'http://i.imgur.com/xgjt5AI.gif',
           'http://i.imgur.com/e6327Nd.gif',
           'http://i.imgur.com/SOATEDJ.gif',
-          'http://i.imgur.com/lfL0UvH.webm',
           'http://i.imgur.com/uDNqsKs.gif',
-          'http://i.imgur.com/3j7CNAP.webm',
-          'http://i.imgur.com/4p6uYDA.webm',
           'http://i.imgur.com/iYxCSIx.gif',
           'http://i.imgur.com/m6jAMAE.gif',
           'http://i.imgur.com/CMYo71o.gif',
           'http://i.imgur.com/kvtwvtz.gif',
           'http://i.imgur.com/Oeelidy.gif',
           'http://i.imgur.com/NYOyGqw.gif',
-          'http://i.imgur.com/X4WIDWW.gif')
+          'http://i.imgur.com/X4WIDWW.gif',
+          'http://i.imgur.com/GTxRRuv.gif',
+          'http://i.imgur.com/GS5MDQo.jpg')
         return {'content': 'Random Facepalm', 'url': choice(fp_urls)}
 
     @botcmd(template='showme')
